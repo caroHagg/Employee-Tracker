@@ -13,8 +13,10 @@ VALUE("Salesperson",70000,1),
 ("Lawyer",95000,4);
 
 INSERT INTO employee(first_name,last_name,role_id,manager_id)
-VALUE("Sam","Doe",1,null),
+VALUE 
+("Sam","Doe",1,null),
 ("Kate","Williams",2,1),
 ("Ashley","Right",3,null),
 ("Tom","Wales",4,null),
-("Charles","Wright",1,null);
+("Charles","Wright",1,null)
+("Trent","Blue",2,3);
