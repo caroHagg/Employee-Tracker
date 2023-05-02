@@ -9,7 +9,7 @@ const sqlNameIdRoles =
 
 const sqlAddRole = 
 `INSERT INTO role (title, salary, department_id)
- VALUE ("?",?,?);`
+ VALUE (?,?,?);`
 
 
 

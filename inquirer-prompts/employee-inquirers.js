@@ -1,16 +1,19 @@
 
-const newEmployeeQuestions = (roleList,managerList)=>{
+const newEmployeeQuestions = async (roleList,managerList)=>{
+try{
+    const noneItem = {name:'None',value:null}
+    managerList.unshift(noneItem);
 
     const newEmployeeQ = [
         {
             type:"input",
             message:"What's the employee's first name",
-            name:"first"
+            name:"first_name"
         },
         {
             type:"input",
             message:"What's the employee's last name",
-            name:"last"
+            name:"last_name"
         },
         {
             type:"list",
@@ -23,7 +26,7 @@ const newEmployeeQuestions = (roleList,managerList)=>{
             type:"list",
             message:"Choose a manager: ",
             name:"manager",
-            choices:[{name:'None',value:'null'},managerList]
+            choices:managerList
 
         }
 
@@ -31,6 +34,43 @@ const newEmployeeQuestions = (roleList,managerList)=>{
 
     return newEmployeeQ;
 
+}catch(err){
+    throw err;
 }
+    
 
-module.exports = {newEmployeeQuestions};
+};
+const updateEmployeeQuestions = async (employeeList,roleList)=>{
+    try{
+        
+        const updateEmployeeQ = [
+          
+            {
+                type:"list",
+                message:"Which employee's role do you want to update? ",
+                name:"employee",
+                choices:employeeList
+        
+            },
+            {
+                type:"list",
+                message:"Which role do you want to assign the selected employee?",
+                name:"role",
+                choices:roleList
+    
+            }
+    
+        ]
+    
+        return updateEmployeeQ;
+    
+    }catch(err){
+        throw err;
+    }
+        
+    
+    };
+
+
+
+module.exports = {newEmployeeQuestions,updateEmployeeQuestions};

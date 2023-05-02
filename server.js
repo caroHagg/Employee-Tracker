@@ -2,9 +2,11 @@
 const mysql = require('mysql2');
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-const employeeQuery = require("./queries/employees-query");
+const employeeQuestions = require("./inquirer-prompts/employee-inquirers");
 const roleQuery = require("./queries/role-query");
-const departmentQuery = require("./queries/department-query")
+const departmentQuery = require("./queries/department-query");
+const employeeQuery = require("./queries/employees-query");
+const departmentQuestion =require("./inquirer-prompts/department-inquirer")
 
 
 
@@ -33,26 +35,16 @@ const Init = async()=>{
         if(ans.choice === "View all Employees"){
             await viewAllEmployees();
         }else if(ans.choice == "Add Employee"){
-
-            const queryRole = roleQuery.sqlNameIdRoles;
-            const queryManager = employeeQuery.sqlNameIdEmployees;
-            const listRole = [];
-            const managerList = [];
-            const [roleResults] = await db.promise().query(queryRole);
-            const [managerResults] =await db.promise().query(queryManager);
-            const answers = inquirer
-
-
-
-            
+            await addNewEmployee();
 
         }else if(ans.choice == "Update Employee Role"){ 
+            await updateEmployeeRole();
 
         }else if(ans.choice == "View All Departments"){ 
             await viewAllDepartments();
 
         }else if(ans.choice == "Add Department"){ 
-
+            await addDepartment();
         }else if(ans.choice == "View All Roles"){ 
             await viewAllRoles();
 
@@ -69,7 +61,7 @@ const Init = async()=>{
 };
 
 
-
+//VIEW ALL EMPLOYEES
 const viewAllEmployees = async ()=>{
     try{
         const query = employeeQuery.sqlAllEmployees;
@@ -82,6 +74,50 @@ const viewAllEmployees = async ()=>{
     }
 
 };
+// ADD NEW EMPLOYEE
+const addNewEmployee = async ()=>{
+    try{
+            const sqlQuery = employeeQuery.sqlNameIdEmployees;
+            const queryRole = roleQuery.sqlNameIdRoles;
+            // promise queries to get all roles and employees 
+            const [roleResults] = await db.promise().query(queryRole);
+            const [managerResults] =await db.promise().query(sqlQuery);
+            //call to get the questions for adding employee
+            const questionsEmp = await employeeQuestions.newEmployeeQuestions(roleResults,managerResults);
+            const answers = await inquirer.prompt(questionsEmp);
+            const empQuery = employeeQuery.sqlAddEmployee;
+            await db.promise().query(empQuery,[answers.first_name,answers.last_name,answers.role,answers.manager]);
+            console.log(`\n---- New Employee Has Been Added ---- \n`);
+            Init();
+    }catch(err){
+        throw err;
+    }
+
+
+
+};
+// UPDATE ROLE FOR SPECIFIC EMPLOYEE
+const updateEmployeeRole = async ()=>{
+    try{
+            const sqlQuery = employeeQuery.sqlNameIdEmployees;
+            const queryRole = roleQuery.sqlNameIdRoles;
+
+            const [roleResults] = await db.promise().query(queryRole);
+            const [employeeResults] =await db.promise().query(sqlQuery);
+            const questionsEmp = await employeeQuestions.updateEmployeeQuestions(employeeResults,roleResults);
+            const answers = await inquirer.prompt(questionsEmp);
+            const empQuery = employeeQuery.sqlUpdateEmployeeRole;
+            await db.promise().query(empQuery,[answers.role,answers.employee]);
+            console.log(`\n----  Employee's role has been updated ---- \n`);
+            Init();
+    }catch(err){
+        throw err;
+    }
+
+
+
+};
+// VIEW ALL DEPARTMENTS
 const viewAllDepartments = async () =>{
     try{
         const query = departmentQuery.sqlAllDept;
@@ -92,7 +128,22 @@ const viewAllDepartments = async () =>{
     }catch(err){
         throw err;
     }
+};
+// ADD NEW DEPARTMENT
+const addDepartment = async () =>{
+    try{
+        const questionsDept = departmentQuestion.departmentQuestions;
+        const answers = await inquirer.prompt(questionsDept);
+        const empQuery = departmentQuery.sqlAddDept;
+        await db.promise().query(empQuery,[answers.name]);
+        console.log(`\n---- New Department Has Been Added ---- \n`);
+        Init();
+}catch(err){
+    throw err;
 }
+
+};
+// VIEW ALL ROLES
 const viewAllRoles = async() =>{
     try{
         const query = roleQuery.sqlAllRoles;
@@ -104,7 +155,28 @@ const viewAllRoles = async() =>{
     }catch(err){
         throw err;
     }
+};
+//ADD NEW ROLE 
+const addNewRole = async() =>{
+    try{
+            const sqlQuery = employeeQuery.sqlNameIdEmployees;
+            const queryRole = roleQuery.sqlNameIdRoles;
+            // promise queries to get all roles and employees 
+            const [roleResults] = await db.promise().query(queryRole);
+            const [employeesResults] =await db.promise().query(sqlQuery);
+            const questionsRole = await employeeQuestions.newEmployeeQuestions(roleResults,employeesResults);
+            const answers = await inquirer.prompt(questionsRole);
+            const empQuery = roleQuery.addNewRole;
+            await db.promise().query(empQuery,[answers.first_name,answers.last_name,answers.role,answers.manager]);
+            console.log(`\n---- New Role Has Been Added ---- \n`);
+            Init();
+
+
+    }catch(err){
+        throw err;
+    }
 }
+
 
 Init();
 

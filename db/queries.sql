@@ -15,4 +15,4 @@ SELECT role.id, title, name AS department, salary
  JOIN department ON department.id = department_id
  ORDER BY role.id ASC;
 
-
+DELETE FROM department WHERE id = 5

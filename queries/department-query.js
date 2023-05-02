@@ -7,7 +7,7 @@ const sqlAllDeptNames =
 
 const sqlAddDept = 
 ` INSERT INTO department(name)
-  VALUE ("?");`
+  VALUE (?);`
 
 
 
