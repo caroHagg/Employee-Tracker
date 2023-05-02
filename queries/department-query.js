@@ -4,6 +4,7 @@ const sqlAllDept =
 
 const sqlAllDeptNames =
 `SELECT name FROM department`
+const sqlAllNameAndIdDept = `SELECT name , id AS value FROM department`
 
 const sqlAddDept = 
 ` INSERT INTO department(name)
@@ -11,4 +12,5 @@ const sqlAddDept =
 
 
 
-module.exports = {sqlAllDept,sqlAllDeptNames, sqlAddDept};
+
+module.exports = {sqlAllDept,sqlAllDeptNames,sqlAllNameAndIdDept,sqlAddDept};
