@@ -1,6 +1,0 @@
-const questions = [
-    {
-        type:"input",
-        
-    }
-]

@@ -6,14 +6,16 @@ JOIN role ON role.id = E1.role_id
 JOIN department ON role.department_id = department.id
 ORDER BY E1.id ASC;
  `
+ const sqlNameIdEmployees = 
+ `Select CONCAT(first_name,' ',last_name) AS name, id AS value FROM employee`
 
  const sqlAddEmployee =
  `INSERT INTO employee(first_name,last_name,role_id,manager_id)
  VALUE ("?","?",?,?),`
  
- const sqlSelectedManager = 
- `SELECT CONCAT(first_name, ' ', last_name) AS manager 
-  FROM (employee E1 , employee E2)
-  WHERE E1.id = manager = `
+//  const sqlSelectedManager = 
+//  `SELECT CONCAT(first_name, ' ', last_name) AS manager 
+//   FROM (employee E1 , employee E2)
+//   WHERE E1.id = `
 
- module.exports = {sqlAllEmployees, sqlAddEmployee};
+ module.exports = {sqlAllEmployees,sqlNameIdEmployees, sqlAddEmployee};
